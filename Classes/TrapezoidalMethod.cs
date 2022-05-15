@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Lab1.Classes
 {// 11x - ln(11x) - 2 
@@ -26,10 +27,26 @@ namespace Lab1.Classes
             double h = (UpLim - LowLim) / SplitNumbers;
             double sum = 0.0;
 
-            for (int i = 0; i < SplitNumbers; i++)
+// Последовательный 
+            /*
+             * for (int i = 0; i < SplitNumbers; i++)
             {
                 sum += integral(LowLim + h * i);
             }
+            */
+//Параллельный 
+
+            double[] sums = new double[SplitNumbers];
+
+            Parallel.For(0, SplitNumbers, i =>
+            {
+                sums[i] += integral(LowLim + h * i);
+            });
+            for (int i = 0; i < SplitNumbers; i++)
+            {
+                sum += sums[i];
+            }
+
             tn.Stop();
             TimeSpan tk = tn.Elapsed;
             time = tk.TotalMilliseconds;

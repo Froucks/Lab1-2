@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 
 namespace Lab1.Classes
-{  // 2x - ln(11x) - 1 
+{   // 11x - ln(11x) - 2 
     public class SimpsonMethod : ICalculator
     {
         double ICalculator.Calculate(int SplitNumbers, double LowLim, double UpLim, Func<double, double> integral, out double time)
@@ -30,10 +30,27 @@ namespace Lab1.Classes
             double h = (UpLim - LowLim) / SplitNumbers;
             double sum = 0.0;
 
+            //+ последовательный 
+            /*
             for (int i = 0; i < SplitNumbers; i++)
             {
                 sum += integral(LowLim + h * i) + 2 * integral(LowLim + i * h + h / 2);
             }
+            */
+           //Параллельный 
+            ParallelOptions options = new ParallelOptions();
+            int threads = Environment.ProcessorCount;
+            options.MaxDegreeOfParallelism = threads;
+
+            object locker = new object();
+            Parallel.For(1, SplitNumbers + 1, i =>
+            {
+                lock (locker)
+                {
+                    sum += integral(LowLim + h * i) + 2 * integral(LowLim + i * h + h / 2);
+                }
+            });
+            
             tn.Stop();
             TimeSpan tk = tn.Elapsed;
             time = tk.TotalMilliseconds;

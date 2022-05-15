@@ -77,7 +77,7 @@ namespace Lab
 
             ICalculator calcult = GetMethod();
             double result = calcult.Calculate(splits, lowLim, upLim, x => (11 * x) - Math.Log(11 * x) - 2, out time);
-            _ = MessageBox.Show(Convert.ToString(result), "ResULt", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            _ = MessageBox.Show(Convert.ToString(result)+"\n Время "+time.ToString()+"мс", "ResULt", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 
             Result.Text = result.ToString();
         }
